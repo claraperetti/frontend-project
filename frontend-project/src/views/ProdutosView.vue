@@ -20,30 +20,59 @@
         </thead>
 
         <tbody>
-          <tr>
-            <td>Mouse Gamer</td>
-            <td>R$ 120,00</td>
-            <td>Periféricos</td>
+          <tr v-for="produto in produtos" :key="produto.id">
+            <td>{{ produto.nome }}</td>
+            <td>R$ {{ Number(produto.preco).toFixed(2) }}</td>
+            <td>{{ produto.categoria }}</td>
             <td>
-              <button class="editar">Editar</button>
-              <button class="excluir">Excluir</button>
+              <button class="editar" @click="editarProduto(produto.id)">Editar</button>
+              <button class="excluir" @click="deletarProduto(produto.id)">Excluir</button>
             </td>
           </tr>
 
-          <tr>
-            <td>Teclado Mecânico</td>
-            <td>R$ 250,00</td>
-            <td>Periféricos</td>
-            <td>
-              <button class="editar">Editar</button>
-              <button class="excluir">Excluir</button>
-            </td>
+          <tr v-if="produtos.length === 0">
+            <td colspan="4">Nenhum produto cadastrado.</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import api from '../api'
+
+const produtos = ref([])
+const router = useRouter()
+
+async function carregarProdutos() {
+  try {
+    const response = await api.get('/produtos')
+    produtos.value = response.data
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error)
+  }
+}
+
+function editarProduto(id) {
+  router.push(`/formulario?id=${id}`)
+}
+
+async function deletarProduto(id) {
+  try {
+    await api.delete(`/produtos/${id}`)
+    await carregarProdutos()
+  } catch (error) {
+    console.error('Erro ao excluir produto:', error)
+  }
+}
+
+onMounted(() => {
+  carregarProdutos()
+})
+</script>
 
 <style scoped>
 .container {
