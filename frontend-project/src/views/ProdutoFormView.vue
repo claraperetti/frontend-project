@@ -16,8 +16,12 @@
         <p v-if="mensagemErro" class="erro">{{ mensagemErro }}</p>
 
         <div class="acoes">
-          <button type="button" class="voltar" @click="router.push('/produtos')">Voltar</button>
-          <button type="submit">Salvar</button>
+          <button type="button" class="voltar" @click="router.push('/produtos')">
+            Voltar
+          </button>
+          <button type="submit">
+            {{ editando ? 'Atualizar' : 'Salvar' }}
+          </button>
         </div>
       </form>
     </div>
@@ -49,7 +53,13 @@ async function carregarProduto() {
 
     try {
       const response = await api.get(`/produtos/${id}`)
-      produto.value = response.data
+
+      produto.value = {
+        nome: response.data.nome || '',
+        preco: response.data.preco || '',
+        categoria: response.data.categoria || ''
+      }
+
     } catch (error) {
       console.error('Erro ao buscar produto:', error)
       mensagemErro.value = 'Não foi possível carregar o produto.'
@@ -60,8 +70,14 @@ async function carregarProduto() {
 async function salvarProduto() {
   mensagemErro.value = ''
 
+  // ✅ VALIDAÇÃO MELHORADA
   if (!produto.value.nome || !produto.value.preco || !produto.value.categoria) {
     mensagemErro.value = 'Preencha todos os campos.'
+    return
+  }
+
+  if (produto.value.preco <= 0) {
+    mensagemErro.value = 'Preço deve ser maior que zero.'
     return
   }
 
@@ -72,10 +88,18 @@ async function salvarProduto() {
       await api.post('/produtos', produto.value)
     }
 
+
+    produto.value = {
+      nome: '',
+      preco: '',
+      categoria: ''
+    }
+
     router.push('/produtos')
+
   } catch (error) {
     console.error('Erro ao salvar produto:', error)
-    mensagemErro.value = 'Não foi possível salvar o produto. Verifique se a API está funcionando.'
+    mensagemErro.value = 'Não foi possível salvar o produto. Verifique a API.'
   }
 }
 
