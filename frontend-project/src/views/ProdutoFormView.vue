@@ -70,7 +70,6 @@ async function carregarProduto() {
 async function salvarProduto() {
   mensagemErro.value = ''
 
-  // ✅ VALIDAÇÃO MELHORADA
   if (!produto.value.nome || !produto.value.preco || !produto.value.categoria) {
     mensagemErro.value = 'Preencha todos os campos.'
     return
@@ -124,7 +123,7 @@ onMounted(() => {
   max-width: 420px;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(211, 199, 199, 0.08);
 }
 
 h2 {
@@ -141,7 +140,7 @@ form {
 label {
   margin-bottom: 6px;
   font-weight: bold;
-  color: #444;
+  color: #beb0b0;
 }
 
 input {

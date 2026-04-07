@@ -3,8 +3,7 @@
     <div class="card">
       <h2>Bem-vindo ao Sistema de Cadastro de Produtos</h2>
       <p>
-        Este sistema permite visualizar, cadastrar, editar e excluir produtos
-        de forma simples e organizada.
+        Este sistema permite visualizar, cadastrar, editar e excluir produtos.
       </p>
 
       <router-link to="/produtos">
